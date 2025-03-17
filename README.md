@@ -1,13 +1,14 @@
-# Summer Movies Analysis  
+# Holiday Movies Analysis  
 
 ## Project Overview  
-This project is part of the **COMP4010: Data Visualization** course. The goal is to explore trends in summer movies using data from the [TidyTuesday](https://github.com/rfordatascience/tidytuesday) project. We focus on two key questions related to movie ratings, runtimes, and production trends over time.  
+This project is part of the **COMP4010: Data Visualization** course. The goal is to explore trends in holiday movies using data from the [TidyTuesday](https://github.com/rfordatascience/tidytuesday) project. We focus on two key questions related to movie ratings, runtimes, and production trends over time.  
 
 ## Dataset Information  
-The dataset is sourced from [2024-07-30 Summer Movies](https://github.com/rfordatascience/tidytuesday/blob/main/data/2024/2024-07-30/readme.md) release. It contains information about movies with "summer" in their title, derived from the [Internet Movie Database (IMDb)](https://developer.imdb.com/non-commercial-datasets/).
+The dataset is sourced from [2023-12-12 Holiday Movies](https://github.com/rfordatascience/tidytuesday/blob/main/data/2023/2023-12-12/readme.md) release. It contains information about movies with "holiday", "Christmas", "Hanukkah", or "Kwanzaa" (or variants thereof) in their title, derived from the [Internet Movie Database (IMDb)](https://developer.imdb.com/non-commercial-datasets/).
 
 ### Data Dictionary
-`summer_movies.csv`
+
+`holiday_movies.csv`
 
 |variable        |class     |description     |
 |:---------------|:---------|:---------------|
@@ -15,12 +16,17 @@ The dataset is sourced from [2024-07-30 Summer Movies](https://github.com/rforda
 |title_type      |character |the type/format of the title (movie, video, or tvMovie) |
 |primary_title   |character |the more popular title / the title used by the filmmakers on promotional materials at the point of release |
 |original_title  |character |original title, in the original language |
-|year            |integer   |the release year of a title |
-|runtime_minutes |integer   |primary runtime of the title, in minutes |
-|genres          |character |includes up to three genres associated with the title (comma-delimited)  |
+|year            |double    |the release year of a title |
+|runtime_minutes |double    |primary runtime of the title, in minutes |
+|genres          |character |includes up to three genres associated with the title (comma-delimited) |
 |simple_title    |character |the title in lowercase, with punctuation removed, for easier filtering and grouping |
 |average_rating  |double    |weighted average of all the individual user ratings on IMDb |
-|num_votes       |integer   |number of votes the title has received on IMDb (titles with fewer than 10 votes were not included in this dataset) |
+|num_votes       |double    |number of votes the title has received on IMDb (titles with fewer than 10 votes were not included in this dataset) |
+|christmas       |logical   |whether the title includes "christmas", "xmas", "x mas", etc|
+|hanukkah        |logical   |whether the title includes "hanukkah", "chanukah", etc|
+|kwanzaa         |logical   |whether the title includes "kwanzaa"|
+|holiday         |logical   |whether the title includes the word "holiday"|
+
 
 ### Why This Dataset?  
 We chose this dataset because:
@@ -30,7 +36,7 @@ We chose this dataset because:
 
 ## Research Questions 
 
-### **Q1: Do higher-rated summer movies tend to have longer runtimes?**  
+### **Q1: Do higher-rated movies tend to have longer runtimes?**  
 
 - **Variables Involved:**  
   - `average_rating` (IMDb user rating) – **Numerical**  
@@ -42,7 +48,7 @@ We chose this dataset because:
   - Use **color** to analyze differences across genres.  
   - Compute a **correlation coefficient** to measure the strength of the relationship.
 
-### **Q2: Are filmmakers producing more summer movies in genres with higher average ratings over time?**  
+### **Q2: Are filmmakers producing more holiday movies in genres with higher average ratings over time?**  
 
 - **Variables Involved:**  
   - `year` (Release year) – **Numerical**  
