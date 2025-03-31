@@ -46,7 +46,11 @@ We chose this dataset because:
 - **Analysis Plan:**  
   - Create a **scatterplot** of `average_rating` vs. `runtime_minutes`.  
   - Use **color** to analyze differences across genres.  
-  - Compute a **correlation coefficient** to measure the strength of the relationship.
+  - Compute a **correlation coefficient** to measure the strength of the relationship.  
+  - Visualize the **distribution of runtimes** with a histogram or boxplot to detect outliers.  
+  - Handle **missing values** by either removing or imputing (e.g., genre-specific median runtime).  
+  - Flag and optionally exclude or cap **outliers** (e.g., movies under 30 minutes or over 240 minutes).  
+  - These data cleaning options will be **interactive and tunable** within the dashboard.
 
 ### **Q2: Are filmmakers producing more holiday movies in genres with higher average ratings over time?**  
 
@@ -58,6 +62,8 @@ We chose this dataset because:
 - **Analysis Plan:**  
   - Compute **average IMDb rating per genre per year**.  
   - Count the **number of movies released per genre per year**.  
-  - Compare trends using **two separate line charts**:  
-    - A **line chart** showing the number of movies per genre over time.  
-    - A **line chart** showing the average rating per genre over time.    
+  - Use a **100% stacked area chart** to show how genre proportions in holiday movie production change over time.  
+  - Use a **faceted line chart** to visualize average ratings per genre over time.  
+  - Consider bar charts where appropriate and apply **smoothing techniques** (e.g., LOESS or rolling averages) to reduce noise.  
+  - The **interactive dashboard** will support toggling between chart types and smoothing options to allow user-driven exploration.
+
