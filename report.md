@@ -56,3 +56,29 @@ Hence, we create a scatter plot for each genre and add a regression line. Now th
 In a more qualitative evaluation, we can use bar plot to show the correlation coefficient for each genre. Clearly, from the chart, we can see that genres such as Thriller and Western show a strong positive correlation, meaning that longer runtime tends to correlate with higher ratings for these genres. In contrast, genres like History and War exhibit a negative correlation, suggesting that longer runtimes in these genres tend to be associated with lower ratings.
 
 Finally, the answer is YES, but restricted to some genres.
+
+
+### **Q2: Are filmmakers producing more holiday movies in genres with higher average ratings over time?**  
+
+**No, we cannot confidently conclude that.**
+
+While there are moments where high-rated genres (like Romance or Comedy) are followed by spikes in production, this relationship is **not consistent or strong enough** across time to confirm a clear trend — especially within this dataset.
+
+---
+
+### **Key Observations from the overall Stacked Area Chart:**
+
+- **Comedy** remains dominant regardless of rating trends, suggesting cultural or commercial appeal plays a bigger role than audience scores.
+- **Romance** shows some alignment between higher ratings and increased production — but that link weakens in later periods.
+- **Animation** and **Family** often receive high ratings, yet their production changes are modest or even declining.
+- The **100% stacked area chart** reveals shifting genre proportions, but these shifts don’t reliably follow rating patterns.
+
+---
+
+### **Important Insight:**
+> This dataset is a **filtered sample** of all movies, including only those with **“holiday,” “Christmas,” “Hanukkah,” or “Kwanzaa”** in their titles. It **does not represent the full population** of movies or the full genre landscape.
+>
+> Filmmakers’ decisions are likely influenced by the **overall reception of genres across all movies**, not just holiday-themed ones. Therefore, **even if rating influences production broadly**, we **cannot use this holiday-only sample as definitive evidence** of that effect.
+
+---
+
