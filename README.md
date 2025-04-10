@@ -54,24 +54,15 @@ We chose this dataset because:
 
 ### **Q2: Are filmmakers producing more holiday movies in genres with higher average ratings over time?**  
 
-**No, we cannot confidently conclude that.**
+- **Variables Involved:**  
+  - `year` (Release year) – **Numerical**  
+  - `genres` (Movie genre) – **Categorical**  
+  - `average_rating` (IMDb rating) – **Numerical**  
 
-While there are moments where high-rated genres (like Romance or Comedy) are followed by spikes in production, this relationship is **not consistent or strong enough** across time to confirm a clear trend — especially within this dataset.
-
----
-
-### **Key Observations from the Visuals:**
-
-- **Comedy** remains dominant regardless of rating trends, suggesting cultural or commercial appeal plays a bigger role than audience scores.
-- **Romance** shows some alignment between higher ratings and increased production — but that link weakens in later periods.
-- **Animation** and **Family** often receive high ratings, yet their production changes are modest or even declining.
-- The **100% stacked area chart** reveals shifting genre proportions, but these shifts don’t reliably follow rating patterns.
-
----
-
-### **Important Insight:**
-> This dataset is a **filtered sample** of all movies, including only those with **“holiday,” “Christmas,” “Hanukkah,” or “Kwanzaa”** in their titles. It **does not represent the full population** of movies or the full genre landscape.
->
-> Filmmakers’ decisions are likely influenced by the **overall reception of genres across all movies**, not just holiday-themed ones. Therefore, **even if rating influences production broadly**, we **cannot use this holiday-only sample as definitive evidence** of that effect.
-
----
+- **Analysis Plan:**  
+  - Compute **average IMDb rating per genre per year**.  
+  - Count the **number of movies released per genre per year**.  
+  - Use a **100% stacked area chart** to show how genre proportions in holiday movie production change over time.  
+  - Use a **faceted line chart** to visualize average ratings per genre over time.  
+  - Consider bar charts where appropriate and apply **smoothing techniques** (e.g., LOESS or rolling averages) to reduce noise.  
+  - The **interactive dashboard** will support toggling between chart types and smoothing options to allow user-driven exploration.
