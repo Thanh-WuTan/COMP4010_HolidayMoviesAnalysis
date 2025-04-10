@@ -65,6 +65,8 @@ Finally, the answer is YES, but restricted to some genres.
 While there are moments where high-rated genres (like Romance or Comedy) are followed by spikes in production, this relationship is **not consistent or strong enough** across time to confirm a clear trend — especially within this dataset.
 
 ---
+![stacked-area](https://github.com/user-attachments/assets/245e26ca-ed32-4a5d-806f-87189b99af7e)
+
 
 ### **Key Observations from the overall Stacked Area Chart:**
 
@@ -74,6 +76,13 @@ While there are moments where high-rated genres (like Romance or Comedy) are fol
 - The **100% stacked area chart** reveals shifting genre proportions, but these shifts don’t reliably follow rating patterns.
 
 ---
+
+![animation-line](https://github.com/user-attachments/assets/dffba9b4-9934-42d8-a326-ba2a527318e3)
+![romance-line](https://github.com/user-attachments/assets/6c1b2aa0-fe9b-4c9c-96a8-0e023a7c9335)
+![family-line](https://github.com/user-attachments/assets/a66d5419-1512-45d4-8097-6f4e6cbc9f87)
+![drama-line](https://github.com/user-attachments/assets/b140bf2e-3a61-4eea-b9d8-c2f429c79345)
+![comedy-line](https://github.com/user-attachments/assets/b40aae64-2bd5-4500-91ec-05d7e90367ee)
+
 
 ### **Important Insight:**
 > This dataset is a **filtered sample** of all movies, including only those with **“holiday,” “Christmas,” “Hanukkah,” or “Kwanzaa”** in their titles. It **does not represent the full population** of movies or the full genre landscape.
