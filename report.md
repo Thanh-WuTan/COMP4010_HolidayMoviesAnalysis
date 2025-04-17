@@ -29,27 +29,276 @@ This data set is significant because holiday films are a unique genre that gener
 
 ## Q1: Do higher-rated movies tend to have longer runtimes?
 
+Firstly, we will show how we process the data. Here is the plot for top 20 genres, with overlap.
+```python
+plt.figure(figsize=(12, 6))
+holiday_movies['genres'].value_counts().head(20).plot(kind='barh')
+plt.title('Top 20 Genres in Holiday Movies', fontsize=20)
+plt.yticks(fontsize=15)
+# add value to the right of the bar
+for index, value in enumerate(holiday_movies['genres'].value_counts().head(20)):
+    plt.text( value, index, str(value), fontsize=10) # move the text down a bit
+    
+    
+plt.xlabel('Count', fontsize=15)
+
+plt.tight_layout()
+plt.savefig('top_20_genres.png')
+plt.show()
+```
+![scatter](top_20_genres.png)
+
 The first question we will explore is whether higher-rated movies tend to have longer runtimes. To answer this question, we will create a scatter plot of average ratings against runtime minutes in the original holiday movies dataset, and add correlation coefficient between these two variables to quantify the relationship.
 
+### Code block
+```python
+correlation = holiday_movies['average_rating'].corr(holiday_movies['runtime_minutes'])
+print(f'Correlation between average rating and runtime minutes: {correlation:.2f}')
 
+# Create the scatter plot
+plt.figure(figsize=(10, 6))
+sns.scatterplot(data=holiday_movies, x='runtime_minutes', y='average_rating')
+
+# Set the title and labels
+plt.title('Average Rating vs. Runtime Minutes for Holiday Movies')
+plt.xlabel('Runtime Minutes')
+plt.ylabel('Average Rating')
+
+# Add correlation text to the plot
+plt.text(200, 2*9, f'Correlation: {correlation:.2f}', fontsize=12, color='red')
+
+# Ensure both axes have equal scaling
+plt.axis('equal')
+plt.savefig("scatter.png")
+# Show the plot
+plt.show()
+
+```
 ![scatter](scatter.png)
 
 However, we can not see the clear relationship here. The correlation coefficient is -0.2, which is relatively close to 0 and can not indicates any relationship between 2 variables.
 
+Next, we process my data by splitting each group of genres into seperate genres.
+
+```python
+# 1) Split the "genres" column on comma -> list of genres
+holiday_movies['genres'] = holiday_movies['genres'].str.split(',')
+
+# 2) Explode the lists into rows
+holiday_movies_exploded = holiday_movies.explode('genres')
+
+# 3) Strip any leading/trailing whitespace from each genre
+holiday_movies_exploded['genres'] = holiday_movies_exploded['genres'].str.strip()
+plt.figure(figsize=(12, 8))
+holiday_movies_exploded['genres'].value_counts().head(20).plot(kind='barh')
+# add text to the right of the bar
+plt.yticks(fontsize=15)
+for index, value in enumerate(holiday_movies_exploded['genres'].value_counts().head(20)):
+    plt.text( value, index, str(value), fontsize=10) # move the text down a bit
+plt.xlabel('Count', fontsize=15)
+
+
+plt.title('Top 20 Genres in Holiday Movies Exploded',fontsize=20)
+plt.tight_layout()
+plt.savefig('top_20_genres_exploded.png')
+plt.show()
+```
+
+![scatter](top_20_genres_exploded.png)
+
 Hence, we continue by grouping the data by genres and add the label to the plot to see if there is any difference.
+
+### Code block
+```python
+# 1) Count how often each genre appears
+genre_counts = holiday_movies_exploded['genres'].value_counts()
+
+# 2) Identify the top 20
+top_20_genres = genre_counts.head(20).index
+
+plt.figure(figsize=(20, 12))
+
+# 3) Plot each of the top 20 genres separately
+for genre in top_20_genres:
+    subset = holiday_movies_exploded[holiday_movies_exploded['genres'] == genre]
+    plt.scatter(subset['runtime_minutes'], 
+                subset['average_rating'], 
+                label=genre)
+
+# 4) Group all remaining genres into "others"
+others_subset = holiday_movies_exploded[~holiday_movies_exploded['genres'].isin(top_20_genres)]
+plt.scatter(others_subset['runtime_minutes'],
+            others_subset['average_rating'],
+            label='others')
+
+plt.title('Average Rating vs. Runtime Minutes (Top 20 Genres + Others)',fontsize = 20)
+plt.xlabel('Runtime Minutes',fontsize=20)
+plt.ylabel('Average Rating',fontsize=20)
+plt.legend(title='Genres')
+plt.tight_layout()
+plt.savefig('scatter_color.png')
+plt.show()
+```
 
 ![scatter_color](scatter_color.png)
 
 However, we still can not see the relationship, and the color somehow made us confused. But, this motivate us to use some other unsupervised methods to gain more information about the underlying relationship between the two variables given different genres.
 
+
+### Code block
+```python
+
+def plot_ellipse(mean, cov, ax, color='black'):
+    """
+    Plot an ellipse corresponding to 1 standard deviation
+    of the Gaussian defined by mean and covariance (2D).
+    """
+    # Eigen-decompose the covariance to get principal axes
+    eigenvals, eigenvecs = np.linalg.eigh(cov)
+    
+    # Sort eigenvalues in descending order (and reorder eigenvectors accordingly)
+    order = eigenvals.argsort()[::-1]
+    eigenvals = eigenvals[order]
+    eigenvecs = eigenvecs[:, order]
+    
+    # The angle of the ellipse in degrees
+    # np.arctan2(y, x) for the direction of the largest eigenvector
+    angle = np.degrees(np.arctan2(*eigenvecs[:, 0][::-1]))
+    
+    # The width and height of the ellipse are 2 standard deviations
+    # (so that it encloses ~68% of the distribution)
+    width, height = 2 * np.sqrt(eigenvals)
+    
+    # Draw the ellipse
+    ell = patches.Ellipse(xy=mean,
+                          width=width,
+                          height=height,
+                          angle=angle,
+                          edgecolor=color,
+                          facecolor='none',
+                          lw=2)
+    ax.add_patch(ell)
+
+# Example: We'll cluster holiday_movies' (runtime_minutes, average_rating).
+# Drop rows with missing values in these columns to avoid errors.
+df_for_clustering = holiday_movies_exploded[['runtime_minutes', 'average_rating']].dropna()
+
+# Convert to NumPy array
+X = df_for_clustering.values
+
+# Fit a GMM (using 3 components as an example, but you can choose any number)
+gmm = GaussianMixture(n_components=4, random_state=42)
+gmm.fit(X)
+
+# Predict cluster labels
+labels = gmm.predict(X)
+
+# Create a scatter plot colored by cluster
+plt.figure(figsize=(20, 12))
+plt.scatter(X[:, 0], X[:, 1], c=labels, alpha=0.6, s=30)
+plt.title('Gaussian Mixture Model Clusters (with Ellipses)',fontsize=20)
+plt.xlabel('Runtime Minutes',fontsize=20)
+plt.ylabel('Average Rating',fontsize=20)
+
+# Plot an ellipse to illustrate each component
+ax = plt.gca()  # Get current axes
+for i, (mean, cov) in enumerate(zip(gmm.means_, gmm.covariances_)):
+    # Use the same color each cluster's points get by default in the scatter
+    # Matplotlib typically uses 'C0', 'C1', 'C2', etc., for scatter color cycles.
+    color = f'C{i}'
+    plot_ellipse(mean, cov, ax, color=color)
+plt.tight_layout()
+plt.savefig('GMM.png')
+plt.show()
+
+```
+
 ![gmm](GMM.png)
 
 We use Gaussian Mixture Model (GMM) to cluster the data into some clusters, each has normal distribution, and plot the results. We can see that some center of distribitions are overlap. This explain why the scatter plot by genres is confused and this also indicates that the two variables are not independent, it raise us a hypothesis that we can further evaluate the relationship if accessing each genres separately.
 
+### Code Block
+```python
+genre_counts = holiday_movies_exploded['genres'].value_counts()
+top_20_genres = genre_counts.head(20).index
+
+# 2) Create subplots grid: 4 rows x 5 columns = 20 subplots
+fig, axes = plt.subplots(nrows=4, ncols=5, figsize=(20, 16))
+axes = axes.ravel()  # Flatten the 2D axes array to a 1D array for easy indexing
+
+for i, genre in enumerate(top_20_genres):
+    # 3) Subset DataFrame for this genre
+    subset = holiday_movies_exploded[
+        holiday_movies_exploded['genres'] == genre
+    ].dropna(subset=['runtime_minutes', 'average_rating'])
+    
+    # If there's not enough data, skip plotting
+    if subset.shape[0] < 2:
+        axes[i].set_title(f"{genre} (Not enough data)")
+        axes[i].set_xlabel('Runtime (min)')
+        axes[i].set_ylabel('Avg Rating')
+        continue
+    
+    # Scatter plot
+    x = subset['runtime_minutes']
+    y = subset['average_rating']
+    axes[i].scatter(x, y)
+    
+    # 4) Compute regression and plot line
+    slope, intercept, r_val, p_val, std_err = linregress(x, y)
+    
+    # Make a sequence of x-values for the line
+    x_line = np.linspace(x.min(), x.max(), 100)
+    y_line = slope * x_line + intercept
+    
+    axes[i].plot(x_line, y_line, linestyle='--', color='black')
+    
+    # Subplot labeling
+    axes[i].set_title(genre,fontsize=15)
+    axes[i].set_xlabel('Runtime (min)')
+    axes[i].set_ylabel('Avg Rating')
+
+plt.tight_layout()  # Avoid overlapping labels
+plt.savefig('scatters_regression.png')
+plt.show()
+```
 
 ![regression](scatters_regression.png)
 
 Hence, we create a scatter plot for each genre and add a regression line. Now the relationship is clearer because some lines have non-zero slopes. This indicates that the relationship between average ratings and runtime minutes is not consistent across all genres.
+
+
+### Code block
+```python
+genre_counts = holiday_movies_exploded['genres'].value_counts()
+top_20_genres = genre_counts.head(20).index
+
+# 2) For each genre, compute the correlation between runtime_minutes and average_rating
+genre_correlations = []
+for genre in top_20_genres:
+    subset = holiday_movies_exploded[holiday_movies_exploded['genres'] == genre]
+    # Drop any rows missing runtime_minutes or average_rating
+    subset = subset[['runtime_minutes', 'average_rating']].dropna()
+
+    # If there's fewer than 2 data points, correlation can't be computed
+    if len(subset) < 2:
+        corr = float('nan')
+    else:
+        corr = subset['runtime_minutes'].corr(subset['average_rating'])
+    genre_correlations.append(corr)
+
+# 3) Plot a bar chart
+plt.figure(figsize=(10, 6))
+plt.bar(top_20_genres, genre_correlations)
+plt.xticks(rotation=90)  # rotate genre labels for readability
+plt.title("Correlation between Runtime & Rating for Top 20 Genres",fontsize=20)
+plt.xlabel("Genre",fontsize=20)
+plt.ylabel("Correlation Coefficient",fontsize=20)
+plt.xticks(rotation=45, ha='right')  # rotate x labels for better readability
+plt.tight_layout()  # help avoid label overlap
+plt.savefig('corr.png')
+plt.show()
+```
 
 ![corr](corr.png)
 
