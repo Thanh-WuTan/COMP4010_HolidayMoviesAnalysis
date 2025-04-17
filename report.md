@@ -111,10 +111,15 @@ For each of the five selected genres, we plot two series over time:
 
 This dual-axis approach allows us to explore whether spikes in rating precede or follow spikes in production volume. By separating these dimensions but sharing the X-axis (time), we can visually assess lagged or mirrored relationships.
 ![animation-line](https://github.com/user-attachments/assets/dffba9b4-9934-42d8-a326-ba2a527318e3)
-![romance-line](https://github.com/user-attachments/assets/6c1b2aa0-fe9b-4c9c-96a8-0e023a7c9335)
 ![family-line](https://github.com/user-attachments/assets/a66d5419-1512-45d4-8097-6f4e6cbc9f87)
+Animation and Family genres show high ratings but inconsistent or even negative production growth, indicating other constraints such as production cost or limited seasonal demand.
+![romance-line](https://github.com/user-attachments/assets/6c1b2aa0-fe9b-4c9c-96a8-0e023a7c9335)
+Romance shows some alignment, where high average ratings are followed by an uptick in production.
 ![drama-line](https://github.com/user-attachments/assets/b140bf2e-3a61-4eea-b9d8-c2f429c79345)
+Drama is relatively stable in rating but declines in production, possibly reflecting shifting audience expectations or distribution strategies.
 ![comedy-line](https://github.com/user-attachments/assets/b40aae64-2bd5-4500-91ec-05d7e90367ee)
+Comedy maintains high production volume even during periods of declining average rating, suggesting factors other than audience feedback are driving its continued popularity.
+
 
 **Code Block:**
 ```python
